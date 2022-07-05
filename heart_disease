@@ -1,0 +1,129 @@
+import statsmodels.api as sm
+import statsmodels.api as sma
+import matplotlib.pyplot as plt
+import pandas as pd
+import numpy as np
+import seaborn as sns
+import warnings
+import os
+import joblib
+import itertools
+import subprocess
+from time import time
+from scipy import stats
+import scipy.optimize as opt
+from scipy.stats import chi2_contingency
+from sklearn.datasets import make_classification
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import roc_curve
+
+data = pd.read_excel(r"C:\Users\milip\Desktop\dataScience_brown\Heart Disease.xlsx")
+data.shape
+
+data.head()
+
+#df.shape
+#df.describe()
+
+
+# One-hot encode the data using pandas get_dummies
+data = pd.get_dummies(data)
+data.iloc[:, :].head(5)
+
+# Use numpy to convert to arrays
+import numpy as np
+# Labels are the values we want to predict
+labels = np.array(features['actual'])
+# Remove the labels from the features
+# axis 1 refers to the columns
+features= features.drop('actual', axis = 1)
+# Saving feature names for later use
+feature_list = list(features.columns)
+# Convert to numpy array
+features = np.array(features)
+
+import statsmodels.formula.api as sm
+import statsmodels.api as sma
+from sklearn.model_selection import train_test_split
+from sklearn.svm import SVC
+
+x, y = data.iloc[:, 0:13], data.iloc[:, 13]
+
+y.head()
+
+#glm stands for Generalized Linear Model
+#mylogit = sm.glm( formula = "upgraded ~ purchases + extraCards",
+                 #data = df,
+                 #family = sma.families.Binomial() ).fit()
+#mylogit.summary()
+
+#Train-Test Split
+
+X_train, X_test, y_train, y_test = train_test_split(x, y, random_state = 1, train_size = .70)
+model = SVC()
+model.fit(X_train, y_train)
+
+predictions = model.predict(X_test)
+
+
+
+#building the model and fitting the data 
+#log_reg = sma.Logit(ytrain, xtrain).fit()
+
+
+
+
+
+
+from sklearn.metrics import classification_report 
+from sklearn.metrics import confusion_matrix
+
+print(classification_report(y_test, predictions))
+
+#Confusion matrix
+print(confusion_matrix(y_test, predictions))
+
+# Import the model we are using
+from sklearn.ensemble import RandomForestRegressor
+# Instantiate model with 1000 decision trees
+rf = RandomForestRegressor(n_estimators = 1000, random_state = 1)
+# Train the model on training data
+rf.fit(X_train, y_train);
+
+predictions = rf.predict(X_test)
+
+errors = abs(predictions - y_test)
+
+print(round(np.mean(errors), 2))
+
+data1 = np.array(data)
+y = data.iloc[:, 13]
+
+
+# import support vector classifier 
+# "Support Vector Classifier"
+from sklearn.svm import SVC  
+clf = SVC(kernel='linear') 
+  
+# fitting x samples and y classes 
+clf.fit(X_train, y_train) 
+
+predictions = clf.predict(X_test)
+print(predictions[:5])
+
+clf = SVC(kernel='linear')
+clf.fit(X_train, y_train)
+
+# Visualizing the linear function for our SVM classifier
+import numpy as np
+from seaborn import scatterplot
+w = clf.coef_[0]
+b = clf.intercept_[0]
+x_visual = np.linspace(32,57)
+y_visual = -(w[0] / w[1]) * x_visual - b / w[1]
+
+scatterplot(data = X_train, X, y, hue=y_train)
+plt.plot(x_visual, y_visual)
+plt.show()
+
